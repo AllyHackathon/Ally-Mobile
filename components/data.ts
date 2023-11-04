@@ -5,3 +5,5 @@ export const rel_types = [
   "FRIENDS",
   "ROMANCE - RIZZ",
 ];
+
+export const tone = ["Formal", "Casual"];
