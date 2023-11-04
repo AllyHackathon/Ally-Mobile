@@ -9,11 +9,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./styles";
-import IonIcons from "react-native-vector-icons";
+import { Ionicons } from "react-native-vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [selectedMood, setSelectedMood] = useState<string>("");
   const [relType, setRelType] = useState<string>("");
+
+  const userImage = null;
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={[styles.container, { paddingHorizontal: 16 }]}>
@@ -24,7 +26,19 @@ const HomeScreen = ({ navigation }) => {
             marginBottom: 44,
           }}
         >
-          <Image style={styles.profilePic} />
+          {userImage ? (
+            <Image style={styles.profilePic} />
+          ) : (
+            <View
+              style={[
+                styles.profilePic,
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <Ionicons name="person" color={"rgba(174,174,178,1)"} size={34} />
+            </View>
+          )}
+
           <Text
             style={{ fontSize: 22, textAlign: "center", fontWeight: "800" }}
           >
@@ -68,8 +82,21 @@ const HomeScreen = ({ navigation }) => {
             style={{ flexDirection: "row" }}
           >
             {rel_types.map((rel, index) => (
-              <Pressable key={index} style={styles.relView}>
-                <Text style={styles.relText}>{rel}</Text>
+              <Pressable
+                onPress={() => {
+                  relType == rel ? setRelType("") : setRelType(rel);
+                }}
+                key={index}
+                style={[
+                  styles.relView,
+                  relType == rel && { backgroundColor: "rgba(117,1,233,1)" },
+                ]}
+              >
+                <Text
+                  style={[styles.relText, relType == rel && { color: "#fff" }]}
+                >
+                  {rel}
+                </Text>
               </Pressable>
             ))}
           </ScrollView>
@@ -164,21 +191,29 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <Pressable
+      <View
         style={{
-          height: 58,
-          width: 58,
-          borderRadius: 29,
-          justifyContent: "center",
+          paddingVertical: 12,
           alignItems: "center",
-          alignSelf: "center",
-          backgroundColor: "rgba(117,1,233,1)",
-          paddingBottom: 8,
+          borderTopWidth: 1,
+          borderColor: "rgba(242,242,247,0.71)",
+          opacity: 5,
         }}
-        onPress={() => navigation.navigate("CreateChat")}
       >
-        <Text style={{ fontSize: 44, color: "#fff" }}>+</Text>
-      </Pressable>
+        <Pressable
+          style={{
+            height: 58,
+            width: 58,
+            borderRadius: 29,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(117,1,233,1)",
+          }}
+          onPress={() => navigation.navigate("CreateChat")}
+        >
+          <Ionicons name="add" color={"#fff"} size={34} />
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };

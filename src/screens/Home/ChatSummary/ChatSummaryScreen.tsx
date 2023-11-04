@@ -1,14 +1,56 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { Calendar } from "react-native-calendars";
+import { useNavigation, useRoute } from "@react-navigation/core";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const ChatSummaryScreen = () => {
+  const { params } = useRoute();
+  const navigation = useNavigation();
+
+  const { bottom } = useSafeAreaInsets();
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: "#fff",
+        justifyContent: "space-between",
+        paddingBottom: bottom + 28,
+        paddingHorizontal: 16,
       }}
-    ></View>
+    >
+      <Calendar
+        theme={{
+          arrowColor: "rgba(117,1,233,1)",
+          textMonthFontWeight: "700",
+          textDayFontWeight: "500",
+          todayTextColor: "rgba(117,1,233,1)",
+          selectedDayBackgroundColor: "rgba(117,1,233,1)",
+        }}
+        enableSwipeMonths={true}
+        markedDates={{
+          "2023-11-02": { selected: true },
+          "2023-11-03": { selected: true },
+        }}
+      />
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          paddingVertical: 18,
+          backgroundColor: "rgba(117,1,233,1)",
+          borderRadius: 18,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ fontSize: 17, color: "#fff", fontWeight: "700" }}>
+          Go to chat with @{params.chat.otherUser}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

@@ -44,11 +44,11 @@ function AppNavigator() {
 
           <Stack.Screen
             options={{
-              headerTintColor: "rgba(117,1,233,1)",
-              headerTitleStyle: {
-                color: "#000",
-              },
+              presentation: "formSheet",
               headerShadowVisible: false,
+              headerTitleStyle: {
+                fontWeight: "800",
+              },
               title: "Chat Summary",
             }}
             name="ChatSummary"
