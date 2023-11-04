@@ -1,4 +1,10 @@
-import { View, Text, TextInput, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { rel_types } from "../../../../components/data";
 import { styles } from "./styles";
@@ -15,15 +21,17 @@ const CreateChatScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Text
-          style={{
-            fontSize: 17,
-            fontWeight: "600",
-            color: complete ? "rgba(117,1,233,1)" : "rgba(117,1,233,0.3)",
-          }}
-        >
-          Done
-        </Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text
+            style={{
+              fontSize: 17,
+              fontWeight: "600",
+              color: complete ? "rgba(117,1,233,1)" : "rgba(117,1,233,0.3)",
+            }}
+          >
+            Done
+          </Text>
+        </TouchableOpacity>
       ),
     });
   }, [navigation, complete]);
@@ -71,7 +79,8 @@ const CreateChatScreen = () => {
           <Text style={styles.optionText}> Casual</Text>
         </View>
       </ScrollView>
-      <View
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
         style={{
           paddingVertical: 18,
           backgroundColor: complete
@@ -86,7 +95,7 @@ const CreateChatScreen = () => {
         <Text style={{ fontSize: 17, color: "#fff", fontWeight: "700" }}>
           Create Chat
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

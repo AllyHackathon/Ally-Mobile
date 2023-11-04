@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { styles } from "./styles";
@@ -80,7 +81,10 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.subHeader}>Current chats</Text>
           <View>
             {chats_summary.map((chats, index) => (
-              <View
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ChatSummary", { chat: chats })
+                }
                 key={index}
                 style={[
                   {
@@ -155,7 +159,7 @@ const HomeScreen = ({ navigation }) => {
                 >
                   {chats.summary}
                 </Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -225,7 +229,7 @@ const chats_summary = [
     relType: "Friend",
   },
   {
-    summary: "This conversation seems like it's not going anywhere",
+    summary: "This conversation seems like it's not going anywhere my guy",
     otherUser: "paul",
     lastUpdate: "3 days ago",
     rating: {
