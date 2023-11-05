@@ -18,7 +18,9 @@ const HomeScreen = () => {
   const [user, setUser] = useState();
   const [chats, setChats] = useState();
 
-  const userImage = null;
+  const [currentUserChats, setCurrentUserChats] = useState();
+
+  const userImage = true;
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -31,29 +33,61 @@ const HomeScreen = () => {
     });
   }, []);
 
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
-  };
+  // var requestOptions = {
+  //   method: "GET",
+  //   redirect: "follow",
+  // };
 
-  fetch(
-    "https://328df9ffbf16.ngrok.app/users/6546c7fc0fd58a14f9ddabe6",
-    requestOptions
-  )
-    .then((response) => response.text())
-    .then((result) => {
-      setUser(result);
-    })
-    .catch((error) => console.log("error", error));
+  // fetch(
+  //   "https://328df9ffbf16.ngrok.app/users/6546c7fc0fd58a14f9ddabe6",
+  //   requestOptions
+  // )
+  //   .then((response) => response.text())
+  //   .then((result) => {
+  //     setUser(result);
+  //   })
+  //   .catch((error) => console.log("error", error));
 
-  fetch("https://328df9ffbf16.ngrok.app/chats/", requestOptions)
-    .then((response) => response.text())
-    .then((result) => {
-      setChats(result);
-    })
-    .catch((error) => console.log("error", error));
+  // fetch("https://328df9ffbf16.ngrok.app/chats/", requestOptions)
+  //   .then((response) => response.text())
+  //   .then((result) => {
+  //     setChats(result);
+  //   })
+  //   .catch((error) => console.log("error", error));
 
-  console.log(chats);
+  // console.log(chats);
+
+  // const myChats = chats?.filter(
+  //   (chat) => chat.owner.authorizer_id == user?.authorizer_id
+  // );
+
+  async function getUserAndChats(page = 1, pageSize = 10) {
+    const userResponse = await fetch(
+      "https://328df9ffbf16.ngrok.app/users/6546c7fc0fd58a14f9ddabe6"
+    );
+    const user = await userResponse.json();
+    setUser(user);
+
+    const chatsResponse = await fetch(
+      `https://328df9ffbf16.ngrok.app/chats/?page=${page}&pageSize=${pageSize}`
+    );
+    const chats = await chatsResponse.json();
+
+    const myChats = chats.filter(
+      (chat) => chat.owner.authorizer_id === user.authorizer_id
+    );
+
+    console.log(myChats);
+    setChats(myChats);
+  }
+
+  // getUserAndChats();
+
+  useEffect(() => {
+    getUserAndChats(1, 10);
+  }, []);
+
+  console.log("chats", chats);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,7 +100,10 @@ const HomeScreen = () => {
           }}
         >
           {userImage ? (
-            <Image style={styles.profilePic} />
+            <Image
+              source={require("../../../../assets/image.png")}
+              style={styles.profilePic}
+            />
           ) : (
             <View
               style={[
@@ -81,7 +118,7 @@ const HomeScreen = () => {
           <Text
             style={{ fontSize: 22, textAlign: "center", fontWeight: "800" }}
           >
-            @george
+            {user?.full_name}
           </Text>
         </View>
         {/* chat rating  */}
@@ -146,19 +183,126 @@ const HomeScreen = () => {
         <View>
           <Text style={styles.subHeader}>Current chats</Text>
           <View>
-            {chats_summary.map((chats, index) => (
+            {(selectedMood == "" && relType == "") ||
+            (selectedMood == "good" &&
+              (relType == "" || relType == "VC - FOUNDER")) ||
+            (relType == "VC - FOUNDER" &&
+              (selectedMood == "good" || selectedMood == "")) ? (
+              chats?.map((chatsMap, index) => {
+                console.log("item", chatsMap?.history);
+                let otheruser =
+                  index == 0
+                    ? "michael"
+                    : chatsMap.score == 5
+                    ? "jane"
+                    : "steve";
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("ChatSummary", {
+                        chat: chatsMap,
+                        name: otheruser,
+                      })
+                    }
+                    key={index}
+                    style={[
+                      {
+                        paddingVertical: 22,
+                        borderTopWidth: 1,
+                        borderColor: "rgba(199,199,204,0.41)",
+                      },
+                      index == 0 && { borderTopWidth: 0 },
+                    ]}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: "800",
+                          color: "rgba(117,1,233,1)",
+                          marginBottom: 4,
+                        }}
+                      >
+                        @{otheruser}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: "500",
+                          color: "rgba(174,174,178,1)",
+                        }}
+                      >
+                        {chatsMap?.created_at.slice(0, 10)}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View
+                        style={{
+                          padding: 6,
+                          backgroundColor: "rgba(242,242,247,1)",
+                          marginBottom: 4,
+                          alignSelf: "flex-start",
+                          borderRadius: 3,
+                          marginRight: 2,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontWeight: "800",
+                            color: "rgba(174,174,178,1)",
+                          }}
+                        >
+                          {chatsMap?.relationship}
+                        </Text>
+                      </View>
+
+                      <Text>
+                        {chatsMap?.score >= 7
+                          ? "😁"
+                          : chatsMap?.score >= 5
+                          ? "😐"
+                          : "💀"}
+                      </Text>
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: "800",
+                        color: "#000",
+                      }}
+                    >
+                      This chat has a score of {chatsMap?.score}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })
+            ) : selectedMood == "mid" ? (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("ChatSummary", { chat: chats })
+                  navigation.navigate("ChatSummary", {
+                    chat: chats[2],
+                    name: "jane",
+                  })
                 }
-                key={index}
                 style={[
                   {
                     paddingVertical: 22,
                     borderTopWidth: 1,
                     borderColor: "rgba(199,199,204,0.41)",
                   },
-                  index == 0 && { borderTopWidth: 0 },
+                  { borderTopWidth: 0 },
                 ]}
               >
                 <View
@@ -175,7 +319,7 @@ const HomeScreen = () => {
                       marginBottom: 4,
                     }}
                   >
-                    @{chats.otherUser}
+                    @{"jane"}
                   </Text>
                   <Text
                     style={{
@@ -184,7 +328,7 @@ const HomeScreen = () => {
                       color: "rgba(174,174,178,1)",
                     }}
                   >
-                    {chats.lastUpdate}
+                    {chats[2]?.created_at.slice(0, 10)}
                   </Text>
                 </View>
                 <View
@@ -211,10 +355,17 @@ const HomeScreen = () => {
                         color: "rgba(174,174,178,1)",
                       }}
                     >
-                      {chats.relType}
+                      {chats[2]?.relationship}
                     </Text>
                   </View>
-                  <Text>{chats.rating.emoji}</Text>
+
+                  <Text>
+                    {chats[2]?.score >= 7
+                      ? "😁"
+                      : chats[2]?.score >= 5
+                      ? "😐"
+                      : "💀"}
+                  </Text>
                 </View>
                 <Text
                   style={{
@@ -223,10 +374,10 @@ const HomeScreen = () => {
                     color: "#000",
                   }}
                 >
-                  {chats.summary}
+                  This chat has a score of {chats[2]?.score}
                 </Text>
               </TouchableOpacity>
-            ))}
+            ) : null}
           </View>
         </View>
       </ScrollView>

@@ -12,6 +12,22 @@ const ChatSummaryScreen = () => {
   const navigation = useNavigation();
 
   const { bottom } = useSafeAreaInsets();
+  const datesMarked =
+    params.name == "steve"
+      ? {
+          "2023-10-30": { selected: true },
+          "2023-11-01": { selected: true },
+          "2023-11-02": { selected: true },
+          "2023-11-03": { selected: true },
+          "2023-11-05": { selected: true },
+        }
+      : {
+          "2023-11-02": { selected: true },
+          "2023-11-03": { selected: true },
+          "2023-11-04": { selected: true },
+          "2023-11-05": { selected: true },
+        };
+
   return (
     <View
       style={{
@@ -31,10 +47,7 @@ const ChatSummaryScreen = () => {
           selectedDayBackgroundColor: "rgba(117,1,233,1)",
         }}
         enableSwipeMonths={true}
-        markedDates={{
-          "2023-11-02": { selected: true },
-          "2023-11-03": { selected: true },
-        }}
+        markedDates={datesMarked}
       />
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -47,7 +60,7 @@ const ChatSummaryScreen = () => {
         }}
       >
         <Text style={{ fontSize: 17, color: "#fff", fontWeight: "700" }}>
-          Go to chat with @{params.chat.otherUser}
+          Go to chat with @{params.name}
         </Text>
       </TouchableOpacity>
     </View>
