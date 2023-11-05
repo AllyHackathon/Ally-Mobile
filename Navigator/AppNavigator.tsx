@@ -9,7 +9,7 @@ import * as SecureStore from "expo-secure-store";
 
 import * as WebBrowser from "expo-web-browser";
 import { Authorizer } from "@authorizerdev/authorizer-js";
-//import { AuthorizerSocialLogin } from '@authorizerdev/authorizer-react'
+import { AuthorizerSocialLogin } from "@authorizerdev/authorizer-react";
 
 import HomeScreen from "../src/screens/Home/HomeScreen/HomeScreen";
 import CreateChatScreen from "../src/screens/Home/CreateChatScreen/CreateChatScreen";

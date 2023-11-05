@@ -7,7 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import { Ionicons } from "react-native-vector-icons";
 import { useNavigation } from "@react-navigation/core";
@@ -15,6 +15,8 @@ import { useNavigation } from "@react-navigation/core";
 const HomeScreen = () => {
   const [selectedMood, setSelectedMood] = useState<string>("");
   const [relType, setRelType] = useState<string>("");
+  const [user, setUser] = useState();
+  const [chats, setChats] = useState();
 
   const userImage = null;
   const navigation = useNavigation();
@@ -28,6 +30,30 @@ const HomeScreen = () => {
       ),
     });
   }, []);
+
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  fetch(
+    "https://328df9ffbf16.ngrok.app/users/6546c7fc0fd58a14f9ddabe6",
+    requestOptions
+  )
+    .then((response) => response.text())
+    .then((result) => {
+      setUser(result);
+    })
+    .catch((error) => console.log("error", error));
+
+  fetch("https://328df9ffbf16.ngrok.app/chats/", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      setChats(result);
+    })
+    .catch((error) => console.log("error", error));
+
+  console.log(chats);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -55,7 +81,7 @@ const HomeScreen = () => {
           <Text
             style={{ fontSize: 22, textAlign: "center", fontWeight: "800" }}
           >
-            @username
+            @george
           </Text>
         </View>
         {/* chat rating  */}
