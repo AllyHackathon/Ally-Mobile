@@ -7,15 +7,28 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import { Ionicons } from "react-native-vector-icons";
+import { useNavigation } from "@react-navigation/core";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [selectedMood, setSelectedMood] = useState<string>("");
   const [relType, setRelType] = useState<string>("");
 
   const userImage = null;
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+          <Ionicons name="cog-outline" color={"#000"} size={32} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={[styles.container, { paddingHorizontal: 16 }]}>
